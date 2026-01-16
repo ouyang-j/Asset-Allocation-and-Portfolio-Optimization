@@ -1,0 +1,249 @@
+---
+title: "Asset Allocation and Portfolio Optimization"
+author: |
+  Tsing Ouyang  
+  CFRM 507: Optimization Methods in Finance     
+  Student Number: 2528985     
+  j22ouyan@uw.edu
+date: "2025-12-01"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Model
+
+The problem should be solved by stochastic dynamic programming, and the goal is to maximize the utility function at the end of the horizon.
+
+## **Stages (**$t$)
+
+$t=0,...,10$ representing the beginning of each year where the investment decision has been made. That is, $t=0$ is the state of the beginning of Year 1. We want to investigate the state $t=10$ where it is the beginning of Year 11, i.e., the ending of Year 10. The investment has been accrued during the 10th year.
+
+## States
+
+-   $W_t$: Wealth state, it is the wealth at the beginning of each year $t$. And at the inception, $W_0=40$
+
+-   $k_t^A \in \{0,1\}$: the life state of Donor A at beginning of year $t$. The binary indicator represents if the Donor has passed away at the time $t$.
+
+-   $k_t^B \in \{0,1\}$: the life state of Donor B at beginning of year $t$. The binary indicator represents if the Donor has passed away at the time $t$.
+
+## Decisions ($x_t$)
+
+It represents the choice of investment fund (Mix 1 to 7) for the upcoming year $t$. $x_t \in \{1,2,3,4,5,6,7\}$ corresponding to Mix 1 to Mix 7.
+
+## Parameters
+
+### Cash flows
+
+-   $S_t$: Spending at the start of year $t$.
+
+-   $D_t$: Donation at the start of year $t$.
+
+## Bequests
+
+-   4 million dollars from Donor A. $B_A = 4$
+
+-   8 million dollars from Donor B. $B_B = 8$
+
+## Fund (Mix) Parameters
+
+-   $\mu_k$: the mean of selected Mix $k$, it is calculated by the given security proportions, means, standard deviation and correlations
+
+-   $\sigma_k$: the standard deviation of selected Mix $k$, it is calculated by the given security proportions, means, standard deviation and correlations
+
+-   $R_k$: it is a random variable, the random continuously compounded return of the selected Mix $k$. It is estimated by $\mu_k, \sigma_k$. And assume the distribution of $R_k$ can be estimated by normal distribution approximately.
+
+    $$
+    R_k \sim N(\mu_k, \sigma_k)
+    $$
+
+-   $k = x_t \in\{1,2,3,4,5,6,7\}$, it is the choice of investment at Mix $k$ for the year $t$
+
+## Constraints
+
+### Time Horizon
+
+The horizon is within 10 years. The decisions are made from $t=0$ through $t=9$, and the outcome is evaluated at $t=10$
+
+$$
+t\in\{0,1,2,3,4,5,6,7,8,9,10\}
+$$
+
+### Wealth
+
+The wealth at state $t$ can be any real number. Even though the utility function only defines the utilities in the range of the wealth $0\le W$. It is also possible that the wealth is negative although no utility is given for negative wealth.
+
+$$W_t\in \mathbb{R}$$ Also, even though it is not defined, by the piece-wise utility function where wealth goes to zero. To make the problem more complete, assume that
+
+$$
+U(0) = -1805
+$$$$
+U(W_t) \le-1895, \quad \forall W_t\le0
+$$
+
+### Decision
+
+The investment decision can only be selected from the 7 Mix funds. i.e., on discrete mix for the entire year must be selected at the beginning of each year $t$
+
+$$
+x_t \in \{1,2,3,4,5,6,7\} 
+$$
+
+### Donor
+
+Donors' state indicator must be binary at $t$ which represents that the donor has exactly died at the beginning of the year $t$. The indicator equals to zero no matter if the donor is alive or already deceased in previous years.
+
+$$
+k_t^A,k_t^B \in \{0,1\}
+$$
+
+once a donor has passed away, the money is received and they can't die again. That is
+
+$$
+\sum_{t=1}^{10} k_{t+1}^A \in\{0,1\}$$$$
+\sum_{t=1}^{10} k_{t+1}^B \in\{0,1\}
+$$
+
+That is, either the donor has not passed away during the entire 10-year horizon, or the donor has passed away during the horizon and the bequest has been received at exactly once.
+
+## Recursive Relationship
+
+### Utility function
+
+define the utility function as piece-wise function as
+
+$$
+U(W) = \begin{cases}
+5.8\cdot\left(\frac{W^{0.5}-1}{0.5}\right), \quad W\ge 110 \\
+W, \quad 100 \le W < 110\\
+1.01\cdot\left(W-e^{-0.0001\cdot\left(100-W\right)}\right), \quad 95 \le W < 100\\
+\ W-0.2\left(95-W\right)^{2}, \quad 0 \le W < 95
+\end{cases}
+$$
+
+### Transition
+
+The wealth transition equation from year $t$ to $t+1$ is
+
+$$
+W_{t+1} = (W_t+(D_{t+1}-S_{t+1})+ k^A_{t+1}B_A + k^B_{t+1}B_B)\cdot \exp(R_{x_t})
+$$
+
+### Bellman Equation
+
+For given state $W_t, k_t^A, k_t^B$ at $t$, define $V_t(W_t, k_t^A, k_t^B)$ is the value function, representing the maximum expected utility of terminal
+
+$$
+V_t(W_t, k_t^A, k_t^B) = \max_{x_t} \mathbb{E}[V_{t+1}(W_{t+1}, k_{t+1}^A, k_{t+1}^B)]
+$$
+
+At terminal state, the end of 10th year, no more decisions are required and the value function is the utility function
+
+$$
+V_{10}(W_{10}, k_{10}^A, k_{10}^B) = U(W_{10})
+$$
+
+## Objective Function
+
+The objective function is to maximize the expected utility fo terminal wealth at Year 10.
+
+$$
+\max \mathbb{E}(U(W_{10}))
+$$
+
+\newpage
+
+# Constant Rate
+
+Alongside with the model described above, the constant rate of return needed to accumulate the targeted amount (\$100 million) in 10 years is
+
+$$
+100 = 40(1+r)^{10} + \sum_{t=1}^{10}((D_{t}-S_{t})+ k^A_{t}B_A + k^B_{t}B_B) (1+r)^{11-t}
+$$
+
+Since $D_t,S_t,B_A,B_B$ are all determined numbers, assign the binary indicators under the above constraints, we can calculate the constant rate of return to get 100 million dollars in 10 years
+
+```{r}
+
+spending <- c(1.7, 1.8, 1.9, 2.0, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7)
+donations <- c(2, 2.2, 2.4, 2.8, 3.2, 3.6, 3.5, 3.4, 3.4, 3.4)
+W_0 <- 40
+W_10 <- 100
+
+Future_Value_Check <- function(r, donorA_dying_Yr, donorB_dying_Yr){
+  Donor_A <- rep(0, 10)
+  Donor_A[donorA_dying_Yr] <- 1*4
+  Donor_B <- rep(0, 10)
+  Donor_B[donorB_dying_Yr] <- 1*8
+  net_flows <- donations - spending + Donor_A + Donor_B
+  
+  
+  FV_total <- 0
+  FV_W0 <- W_0 * (1+r)^10
+  FV_total <- FV_total + FV_W0
+  
+  
+  for (t in 1:10){
+    compounding_periods <- 11 - t
+    FV_flow_t <- net_flows[t] * (1 + r)^compounding_periods
+    FV_total <- FV_total + FV_flow_t
+  }
+  return(FV_total - W_10)
+}
+```
+
+```{r}
+constant_ror <- uniroot(
+  f = function(r){
+    ## The last two arguments are the time of year where the donor has been dead, 
+    ## 0 means he/she survived during the 10-year horizon
+    return(Future_Value_Check(r,0, 0))
+  },
+  interval = c(-0.1, 0.1)
+)
+
+cat(sprintf("The foundation needs a constant annual rate of return of: %.2f%%\n", constant_ror$root * 100))
+```
+
+That is, if both Donor has survived during the 10-year horizon, the rate of return needed to accumulate the targeted amount is 8.24%.
+
+```{r}
+constant_ror <- uniroot(
+  f = function(r){
+    ## The last two arguments are the time of year where the donor has been dead, 
+    ## 0 means he/she survived during the 10-year horizon
+    return(Future_Value_Check(r,1, 1))
+  },
+  interval = c(-0.1, 0.1)
+)
+
+cat(sprintf("The foundation needs a constant annual rate of return of: %.2f%%\n", constant_ror$root * 100))
+```
+
+Also, if both donors have passed away at the beginning of the first year, the required rate is 5.61%. Therefore, we conclude that to meet the targeted amount of 100 million dollars in 10 years. Depending on the date of donors' decease, the needed constant rate of return is between
+
+$$
+(5.61\%, 8.24\%)
+$$
+
+And, intuitively, if the donors' death are more close to the beginning, the required rate is more close to 5.61%, if the donors surviving more time, the required rate is more close to 8.24%.
+
+Coming back to the securities of the market of US Stocks, Developed International Stocks, Emerging Markets Stocks, Global REITs, US Aggregate Bonds, Hedge Funds, and Cash. Based on the associated normal statistics, calculate the expected mean of each securities
+
+$$
+\mathbb{E}(R_i) = \hat{\mu}_i = 1- \exp(\mu + 0.5\sigma_i^2)
+$$
+
+| Security | Log Mean ($\mu$) | Log Standard Deviation ($\sigma$) | Expected gross mean ($\hat{\mu}$) |
+|------------------|------------------|------------------|------------------|
+| US Stock | 5.7% | 17.6% | 7.52% |
+| Dev. Int’l Stock | 5.4% | 18.7% | 7.41% |
+| Emer. Mkt. Stock | 5.2% | 24.3% | 8.49% |
+| Global REIT | 5.0% | 19.2% | 7.08% |
+| US Agg Bond | 3.3% | 3.7% | 3.43% |
+| Hedge Funds | 6.3% | 6.6% | 6.73% |
+| Cash | 2.8% | 5.6% | 3.00% |
+
+That is, for some securities (Cash and Bond), it is impossible to meet the minimum required constant rate of return to meet the targeted amount no matter if the donor has passed away or not. And for the rest of the securities, they fall in the range of the required rates, that is, investing in the securities is possible to meet the 100 million target, but it needs the donors have passed away during the 10-year horizon in some time. Finally, the Emerging Market Stock has good expected return, and it is highly possible to outperform the highest required rate for both donors survived. Therefore, the fund (Mix 7) is a very attractive option because it consists of the highest proportion of Emerging Market Stock
