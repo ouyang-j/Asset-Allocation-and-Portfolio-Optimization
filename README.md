@@ -39,3 +39,24 @@ $$W_{t+1} = (W_t - S_t + D_t) \cdot e^{r_{mix, t}}$$
 * **Likelihood of Success:** Determined the probability of reaching the $100M threshold under various market scenarios.
 * **Strategy Evolution:** Identified how the optimal asset mix shifts from aggressive to conservative as the foundation approaches its target wealth.
 * **Sensitivity Analysis:** Analyzed the impact of uncertain bequests on the long-term probability of success.
+
+
+## Data Analysis
+Based on the market condition across different assets/investments and the operational cash flows (costs and earnings), the terminal wealth at the end of 10th year is very exponentially distributed, which majorly lies around $90M
+![Terminal Wealth Histogram](images/wealth_hist.png)
+
+Instead of meeting 100M target in 10th Year, avoiding ending wealth is less than 95M is more in favor according to the utility function
+![Terminal Utility Function](images/wealth_utility.png)
+
+Using Monte Carlo Simulation, the likelihood of Success is not good. The statistics are shows as:
+Probability of hitting 100M: 18.56%
+Median terminal wealth: 86.13484M
+Conservative case (bottom 5%): 59.97M
+Optimistic case (top 5%): 116.06M
+50% Range: 75.77M – 96.24M 
+![5000 Monte Carlo Simulation](images/monte_carlo_simulation.png)
+
+And for a random path from the simulation, Mix 4 & 5 (Hedge Fund) are the most common choice. When far below the target, growth is important (Mix 6&7: Emerging Market)
+When wealth is too large, safety is important (Mix 2: Bonds)
+When approaching to the 100M target, trade-off is considered
+![Randon Path](images/random_path.png)
