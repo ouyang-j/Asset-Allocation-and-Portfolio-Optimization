@@ -26,7 +26,8 @@ The model maximizes the **Expected Utility of Wealth** at the 10-year horizon ($
 
 
 ### 3. Solution Approach
-Using Dynamic Programming, I implemented a **recursive relationship between stages** to determine the optimal investment strategy at each yearly interval. This allows the foundation to dynamically switch asset mixes in response to market performance. Then using Monto Carlo Simulations to determine the terminal wealth and corresponding utility and report statistics.
+Using Dynamic Programming, I implemented a **recursive relationship between stages** to determine the optimal investment strategy at each yearly interval. This allows the foundation to dynamically switch asset mixes in response to market performance. Then using Monto Carlo Simulations to determine the terminal wealth and corresponding utility and report statistics. The key relation follows as:
+$$W_{t+1} = (W_t - S_t + D_t) \cdot e^{r_{mix, t}}$$
 
 ## Technologies Used
 * **R:** Core engine for stochastic simulation and optimization.
