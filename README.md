@@ -36,4 +36,4 @@ Using Dynamic Programming, I implemented a **recursive relationship between stag
 ## Key Insights
 * **Likelihood of Success:** Determined the probability of reaching the $100M threshold under various market scenarios.
 * **Strategy Evolution:** Identified how the optimal asset mix shifts from aggressive to conservative as the foundation approaches its target wealth.
-* **Sensitivity Analysis:** Analyzed the impact of Donor A and Donor B’s bequests on the long-term probability of success.
+* **Sensitivity Analysis:** Analyzed the impact of uncertain bequests on the long-term probability of success.
