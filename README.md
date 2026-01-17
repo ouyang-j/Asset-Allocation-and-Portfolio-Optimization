@@ -1,5 +1,8 @@
 # Multi-Stage Asset Allocation and Portfolio Optimization: The $100M Foundation Campaign
-
+![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
+![RStudio](https://img.shields.io/badge/RStudio-%2375AADB.svg?style=for-the-badge&logo=rstudio&logoColor=white)
+![Quantmod](https://img.shields.io/badge/Quantmod-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
+![MASS](https://img.shields.io/badge/MASS-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
 ## Project Overview
 This project focuses on developing a 10-year strategic asset allocation model to grow the portfolio's assets from $40 million to $100 million in a  10-year horizon while managing annual spending and earning cash flows.
 
